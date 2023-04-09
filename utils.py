@@ -2,6 +2,7 @@ from io import StringIO
 import os
 import boto3
 import pandas as pd
+import math
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -85,3 +86,24 @@ def readS3PartialCSV(file_key, number_of_lines=10, offset=0):
   except Exception as e:
     print("ERROR: Could not retrieve MIMIC-III Dataset from s3. Have you added the environment variables from .env.sample into .env?")
     print(e)
+
+def timedelta_to_interval(time_diffs):
+    interval_strings = []
+    
+    for td in time_diffs:
+        months = td.days / 30.0  # Convert timedelta to approximate number of months
+
+        if 0 < months <= 1:
+            interval = '0-1m'
+        elif 1 < months <= 3:
+            interval = '1-3m'
+        elif 3 < months <= 6:
+            interval = '3-6m'
+        elif 6 < months <= 12:
+            interval = '6-12m'
+        else:
+            interval = '12+m'
+        
+        interval_strings.append(interval)
+    
+    return interval_strings
