@@ -7,3 +7,4 @@
   - wget -r -N -c -np --user <physionet_username> --ask-password https://physionet.org/files/mimiciii/1.4/
   - gzip your_download_location/*
   - Upload these files to your S3 bucket that you defined in the `.env` file
+- Run the Jupyter Notebook locally or in Amazon Sagemaker
