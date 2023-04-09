@@ -6,6 +6,25 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def copy_file_from_s3(s3_file_key, local_directory):
+  try:
+    # Create an S3 client
+    s3 = boto3.client('s3')
+
+    bucket_name = os.environ["BUCKET_NAME"]
+
+    # Ensure the local directory exists
+    os.makedirs(local_directory, exist_ok=True)
+
+    # Create the local file path
+    local_file_path = os.path.join(local_directory, os.path.basename(s3_file_key))
+
+    # Download the file from S3 to the local file path
+    s3.download_file(bucket_name, s3_file_key, local_file_path)
+  except Exception as e:
+    print("ERROR: Could not retrieve MIMIC-III Dataset from s3. Have you added the environment variables from .env.sample into .env?")
+    print(e)
+
 def readS3CSV(file_key):
   try:
     s3 = boto3.client('s3')
@@ -16,7 +35,7 @@ def readS3CSV(file_key):
     print("ERROR: Could not retrieve MIMIC-III Dataset from s3. Have you added the environment variables from .env.sample into .env?")
     print(e)
 
-def readS3PartialCSV(file_key, number_of_lines=10):
+def readS3PartialCSV(file_key, number_of_lines=10, offset=0):
   """
   Reads only part of the specified CSV.
 
