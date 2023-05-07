@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scaling Font-Size</title>
+    <style>
+        .word-container {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <div id="output"></div>
+
+    <script>
+        const sentence = "V3000 V290 7852"
+        const weights = [1.0159384298257585, 1.0152804406720695, 1.016621444849458];
+        const minFontSize = 12;
+        const maxFontSize = 20;
+
+        const outputDiv = document.getElementById('output');
+        const words = sentence.split(' ');
+
+        for (let i = 0; i < words.length; i++) {
+            const wordSpan = document.createElement('span');
+            const fontSize = minFontSize + (maxFontSize - minFontSize) * (weights[i] - 1) / (Math.max(...weights) - 1);
+            wordSpan.style.fontSize = fontSize + 'px';
+            wordSpan.textContent = words[i] + ' ';
+            outputDiv.appendChild(wordSpan);
+        }
+    </script>
+</body>
+</html>
