@@ -4,14 +4,12 @@ This repository attempts to replicate the model and results as outlined by [Deep
 
 ## Setup
 
-The code here will assume that the MIMIC-III dataset is present in a S3 bucket on AWS. Thus, the proper credentials must be suplied in an `.env` file at the root of this project and adequate permissions in AWS must be configured by the user.
+### Running the Deepr Model
 
-- Create a new file at the root directory called `.env` and copy and paste in the contents of `.env.sample`, and assign values to these variables.
-- Perform the following to download the MIMIC-III Dataset and put it in S3:
-  - `brew install wget`
-  - `wget -r -N -c -np --user <physionet_username> --ask-password https://physionet.org/files/mimiciii/1.4/`
-  - `gunzip <your_download_location>/*`
-  - Upload these files to your S3 bucket that you defined in the `.env` file
-    - `aws s3 cp <your_download_location> s3://<your_bucket_name>/ --recursive`
-  - Ensure adequate permissions are set up in AWS such that S3 may be accessed via the `boto3` sdk. 
-- Run the Jupyter Notebook locally or in Amazon Sagemaker
+The code requires several CSV files from the MIMIC-III dataset in order to run. Create a folder called 'mimic3' and add it to the root of the project, then add the following files from the MIMIC-III dataset: ADMISSIONS.csv, D_ICD_DIAGNOSES.csv, D_ICD_PROCEDURES.csv, DIAGNOSES_ICD.csv, PATIENTS.csv, PROCEDURES_ICD.csv, and TRANSFERS.csv.
+
+To run the model, run all cells in the Jupyter Notebook *except* the last cell (Training and Validation). Given that we experimented with several modifications of Deepr (Deepr with a CNN, Deepr with an RNN with and without attention, and Deepr with and without embedding layers), you can set the `with_cnn`, `with_attn` and `with_embedding` to `True/False` depending on the model to be run. The original Deepr implementation has `with_cnn=True` and `with_embedding=True`.  
+
+### Visualizing Motifs (optional)
+
+After running the Deepr model with CNN, a file called `motifs_data.json` will be output to the data folder. Each object in this json file represents an EMR for a given patient. Copy the sentence and `normalized_motif_values` values from a given EMR and add it to the `motifs_view.html` file and update the variable assignments in the TODO sections. Open the `motifs_view.html` file to view the motifs relative to the strength of their relative filter response.
